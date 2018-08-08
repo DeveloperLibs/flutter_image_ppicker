@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_image_ppicker/image_picker_handler.dart';
 import 'package:flutter_image_ppicker/image_picker_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,12 +13,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen>
-    with TickerProviderStateMixin, ImagePickerListener {
+    with TickerProviderStateMixin,ImagePickerListener{
+
   File _image;
   AnimationController _controller;
-
-
-  ImagePickerDialog imagePicker;
+  ImagePickerHandler imagePicker;
 
   @override
   void initState() {
@@ -27,8 +27,8 @@ class _HomeScreenState extends State<HomeScreen>
       duration: const Duration(milliseconds: 500),
     );
 
-    imagePicker = new ImagePickerDialog(this, _controller);
-    imagePicker.initState();
+    imagePicker=new ImagePickerHandler(this,_controller);
+    imagePicker.init();
 
   }
 
@@ -46,17 +46,17 @@ class _HomeScreenState extends State<HomeScreen>
       appBar: new AppBar(
         title: new Text(widget.title,
         style: new TextStyle(
-
           color: Colors.white
         ),
         ),
       ),
       body: new GestureDetector(
-        onTap: () => imagePicker.getImage(context),
+        onTap: () => imagePicker.showDialog(context),
         child: new Center(
           child: _image == null
               ? new Stack(
                   children: <Widget>[
+
                     new Center(
                       child: new CircleAvatar(
                         radius: 80.0,
@@ -66,6 +66,7 @@ class _HomeScreenState extends State<HomeScreen>
                     new Center(
                       child: new Image.asset("assets/photo_camera.png"),
                     ),
+
                   ],
                 )
               : new Container(
@@ -85,11 +86,7 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
         ),
       ),
-      floatingActionButton: new FloatingActionButton(
-        onPressed: ()=> imagePicker.getImage(context),
-        tooltip: 'Increment',
-        child: new Icon(Icons.photo_camera),
-      ),
+
     );
   }
 
@@ -99,4 +96,5 @@ class _HomeScreenState extends State<HomeScreen>
       this._image = _image;
     });
   }
+
 }

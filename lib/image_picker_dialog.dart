@@ -1,17 +1,15 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:image_cropper/image_cropper.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:flutter_image_ppicker/image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
-  ImagePickerListener _view;
+
+  ImagePickerHandler _listener;
   AnimationController _controller;
   BuildContext context;
 
-  ImagePickerDialog(
-      ImagePickerListener this._view, AnimationController this._controller);
+  ImagePickerDialog(this._listener, this._controller);
 
   Animation<double> _drawerContentsOpacity;
   Animation<Offset> _drawerDetailsPosition;
@@ -62,25 +60,14 @@ class ImagePickerDialog extends StatelessWidget {
     Navigator.pop(context);
   }
 
+  dismissDialog() {
+    _controller.reverse();
+    startTime();
+  }
+
   @override
   Widget build(BuildContext context) {
     this.context = context;
-
-    dismissDialog(BuildContext context) {
-      _controller.reverse();
-      startTime();
-    }
-
-    openGallery(BuildContext context) async {
-      var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-      cropImage(image);
-    }
-
-    openCamera(BuildContext context) async {
-      var image = await ImagePicker.pickImage(source: ImageSource.camera);
-      cropImage(image);
-    }
-
     return new Material(
         type: MaterialType.transparency,
         child: new Opacity(
@@ -92,16 +79,16 @@ class ImagePickerDialog extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 new GestureDetector(
-                  onTap: () => openCamera(context),
-                  child: buttonWithColorBg(
+                  onTap: () => _listener.openCamera(),
+                  child: roundedButton(
                       "Camera",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0xFF167F67),
                       const Color(0xFFFFFFFF)),
                 ),
                 new GestureDetector(
-                  onTap: () => openGallery(context),
-                  child: buttonWithColorBg(
+                  onTap: () => _listener.openGallery(),
+                  child: roundedButton(
                       "Gallery",
                       EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                       const Color(0xFF167F67),
@@ -109,10 +96,10 @@ class ImagePickerDialog extends StatelessWidget {
                 ),
                 const SizedBox(height: 15.0),
                 new GestureDetector(
-                  onTap: () => dismissDialog(context),
+                  onTap: () => dismissDialog(),
                   child: new Padding(
                     padding: EdgeInsets.fromLTRB(30.0, 0.0, 30.0, 0.0),
-                    child: buttonWithColorBg(
+                    child: roundedButton(
                         "Cancel",
                         EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 0.0),
                         const Color(0xFF167F67),
@@ -125,7 +112,7 @@ class ImagePickerDialog extends StatelessWidget {
         ));
   }
 
-  Widget buttonWithColorBg(
+  Widget roundedButton(
       String buttonLabel, EdgeInsets margin, Color bgColor, Color textColor) {
     var loginBtn = new Container(
       margin: margin,
@@ -151,19 +138,4 @@ class ImagePickerDialog extends StatelessWidget {
     return loginBtn;
   }
 
-  Future cropImage(File image) async {
-    File croppedFile = await ImageCropper.cropImage(
-      sourcePath: image.path,
-      ratioX: 1.0,
-      ratioY: 1.0,
-      maxWidth: 512,
-      maxHeight: 512,
-    );
-    _view.userImage(croppedFile);
-    Navigator.pop(context);
-  }
-}
-
-abstract class ImagePickerListener {
-  userImage(File _image);
 }
