@@ -4,7 +4,6 @@ Flutter - Capture Image from camera or gallery and apply crop. [Read me here](ht
 
 [YouTube](https://youtu.be/u4sMq7uOtcY) ,
 [Facebook](https://www.facebook.com/developerlibs), 
-[G+](https://plus.google.com/109457600203481575432),
 [Instagram](https://www.instagram.com/developerlibs/), 
 [Twitter](https://twitter.com/LibsDeveloper)
 
