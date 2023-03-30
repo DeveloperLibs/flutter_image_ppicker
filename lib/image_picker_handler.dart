@@ -7,42 +7,40 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImagePickerHandler {
-  ImagePickerDialog imagePicker;
-  AnimationController _controller;
-  ImagePickerListener _listener;
+  ImagePickerDialog? imagePicker;
+  AnimationController? _controller;
+  ImagePickerListener? _listener;
 
   ImagePickerHandler(this._listener, this._controller);
 
   openCamera() async {
-    imagePicker.dismissDialog();
+    imagePicker!.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.camera);
-    cropImage(image);
+    cropImage(image as File);
   }
 
   openGallery() async {
-    imagePicker.dismissDialog();
+    imagePicker!.dismissDialog();
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
-    cropImage(image);
+    cropImage(image as File);
   }
 
   void init() {
-    imagePicker = new ImagePickerDialog(this, _controller);
-    imagePicker.initState();
+    imagePicker = new ImagePickerDialog(this, _controller!);
+    imagePicker!.initState();
   }
 
   Future cropImage(File image) async {
-    File croppedFile = await ImageCropper.cropImage(
+    File croppedFile = (await ImageCropper.cropImage(
       sourcePath: image.path,
-      ratioX: 1.0,
-      ratioY: 1.0,
       maxWidth: 512,
       maxHeight: 512,
-    );
-    _listener.userImage(croppedFile);
+    )) as File;
+    _listener!.userImage(croppedFile);
   }
 
   showDialog(BuildContext context) {
-    imagePicker.getImage(context);
+    imagePicker!.getImage(context);
   }
 }
 
