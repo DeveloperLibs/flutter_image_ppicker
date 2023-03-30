@@ -4,15 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_ppicker/image_picker_handler.dart';
 
 class ImagePickerDialog extends StatelessWidget {
+  late ImagePickerHandler _listener;
+  late AnimationController _controller;
+  late BuildContext context;
 
-  ImagePickerHandler _listener;
-  AnimationController _controller;
-  BuildContext context;
+  // ImagePickerDialog(this._listener, this._controller);
 
-  ImagePickerDialog(this._listener, this._controller);
+  late Animation<double> _drawerContentsOpacity;
+  late Animation<Offset> _drawerDetailsPosition;
 
-  Animation<double> _drawerContentsOpacity;
-  Animation<Offset> _drawerDetailsPosition;
+  ImagePickerDialog(ImagePickerHandler imagePickerHandler,
+      AnimationController animationController);
 
   void initState() {
     _drawerContentsOpacity = new CurvedAnimation(
@@ -38,12 +40,12 @@ class ImagePickerDialog extends StatelessWidget {
     showDialog(
       context: context,
       builder: (BuildContext context) => new SlideTransition(
-            position: _drawerDetailsPosition,
-            child: new FadeTransition(
-              opacity: new ReverseAnimation(_drawerContentsOpacity),
-              child: this,
-            ),
-          ),
+        position: _drawerDetailsPosition,
+        child: new FadeTransition(
+          opacity: new ReverseAnimation(_drawerContentsOpacity),
+          child: this,
+        ),
+      ),
     );
   }
 
@@ -137,5 +139,4 @@ class ImagePickerDialog extends StatelessWidget {
     );
     return loginBtn;
   }
-
 }
